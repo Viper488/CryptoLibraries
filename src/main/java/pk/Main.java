@@ -2,14 +2,16 @@ package pk;
 
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Hex;
 import pk.bouncycastle.asymetric.Rsa;
+import pk.bouncycastle.sign.Dsa;
 import pk.bouncycastle.symmetric.Symmetric;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.Security;
-import java.util.Base64;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -20,7 +22,7 @@ public class Main {
             testSymmetricBouncyCastle("AES", input);
             testSymmetricBouncyCastle("Blowfish", input);
             testRsaBouncyCastle(input);
-
+            testDsaBouncyCastle(input);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -51,10 +53,18 @@ public class Main {
 
     public static void testRsaBouncyCastle(String input) throws Exception {
         Rsa rsa = new Rsa(2048);
-        String encrypted = rsa.encrypt(input, rsa.getPublicKey());
-        String decrypted = rsa.decrypt(encrypted, rsa.getPrivateKey());
+        String encrypted = rsa.encrypt(input);
+        String decrypted = rsa.decrypt(encrypted);
         System.out.println("RSA");
         showResult(input, encrypted, decrypted);
+    }
+    public static void testDsaBouncyCastle(String input) {
+        Dsa dsa = new Dsa();
+        BigInteger[] signature = dsa.sign(input);
+        boolean isValid = dsa.verify(input, signature);
+
+        System.out.println("Signature: " + Hex.toHexString(Arrays.toString(signature).getBytes()));
+        System.out.println("Signature is valid: " + isValid);
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

@@ -23,7 +23,6 @@ public class Rsa {
         this.privateKey = (RSAPrivateCrtKeyParameters) cipherKeyPair.getPrivate();
     }
 
-
     private static AsymmetricCipherKeyPair generateRSAKeyPair(int keySize) throws Exception {
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
         generator.initialize(keySize);
@@ -33,26 +32,18 @@ public class Rsa {
         return new AsymmetricCipherKeyPair(publicKey, privateKey);
     }
 
-    public String encrypt(String data, RSAKeyParameters publicKey) throws Exception {
+    public String encrypt(String data) {
         byte[] byteData = data.getBytes(StandardCharsets.UTF_8);
         RSAEngine rsaEngine = new RSAEngine();
-        rsaEngine.init(true, publicKey);
+        rsaEngine.init(true, this.publicKey);
         return Base64.getEncoder().encodeToString(rsaEngine.processBlock(byteData, 0, byteData.length));
     }
 
-    public String decrypt(String ciphertext, RSAPrivateCrtKeyParameters privateKey) throws Exception {
+    public String decrypt(String ciphertext) {
         byte[] cipherByte = Base64.getDecoder().decode(ciphertext);
         RSAEngine rsaEngine = new RSAEngine();
-        rsaEngine.init(false, privateKey);
+        rsaEngine.init(false, this.privateKey);
 
         return new String(rsaEngine.processBlock(cipherByte, 0, cipherByte.length), StandardCharsets.UTF_8);
-    }
-
-    public RSAKeyParameters getPublicKey() {
-        return publicKey;
-    }
-
-    public RSAPrivateCrtKeyParameters getPrivateKey() {
-        return privateKey;
     }
 }

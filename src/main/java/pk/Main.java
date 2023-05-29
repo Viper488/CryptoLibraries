@@ -1,19 +1,21 @@
 package pk;
 
 import org.bouncycastle.crypto.InvalidCipherTextException;
-import pk.bouncycastle.symetric.Aes;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import pk.bouncycastle.symmetric.Symmetric;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.GeneralSecurityException;
+import java.security.Security;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            String input1 = readFromFile();
-
-            testBouncyCastle(input1);
+            String input = readFromFile();
+            testSymmetricBouncyCastle("AES", input);
+            testSymmetricBouncyCastle("Blowfish", input);
 
         } catch (FileNotFoundException | GeneralSecurityException | InvalidCipherTextException e) {
             throw new RuntimeException(e);
@@ -33,17 +35,17 @@ public class Main {
         return sb.toString();
     }
 
-    public static void testBouncyCastle(String input1) throws GeneralSecurityException, InvalidCipherTextException {
-        // Bouncy Castle
-        // Symmetric
-        Aes aes = new Aes();
-        byte[] ivBytes1 = Aes.generateIVBytes();
-        byte[] encrypted1 = aes.encrypt(input1, ivBytes1);
-        byte[] decrypted1 = aes.decrypt(encrypted1, ivBytes1);
-        System.out.println("AES-CBC");
-        System.out.println("Original text: " + input1);
-        System.out.println("Encrypted text: " + Aes.printEncrypted(encrypted1));
-        System.out.println("Decrypted text: " + Aes.printDecrypted(decrypted1));
-        System.out.println("Decrypted text " + (input1.equals(Aes.printDecrypted(decrypted1)) ? "matches" : "doesn't match") + " original text");
+    public static void testSymmetricBouncyCastle(String algorithm, String input) throws GeneralSecurityException, InvalidCipherTextException {
+        Security.addProvider(new BouncyCastleProvider());
+        Symmetric sym = new Symmetric(algorithm);
+
+        byte[] ivBytes = Symmetric.generateIVBytes();
+        String encrypted = sym.encrypt(input, ivBytes);
+        String decrypted = sym.decrypt(encrypted, ivBytes);
+        System.out.println(algorithm + "-CBC");
+        System.out.println("Original text: " + input);
+        System.out.println("Encrypted text: " + encrypted);
+        System.out.println("Decrypted text: " + decrypted);
+        System.out.println("Decrypted text " + (input.equals(decrypted) ? "matches" : "doesn't match") + " original text");
     }
 }

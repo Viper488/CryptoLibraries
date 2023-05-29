@@ -19,6 +19,8 @@ import java.security.Security;
 import java.util.Arrays;
 
 public class Aes {
+    private final int KEY_SIZE = 256;
+    private static final int IV_SIZE = 16;
     private final SecretKey secretKey;
     private final BufferedBlockCipher cipher;
 
@@ -30,8 +32,7 @@ public class Aes {
 
     private SecretKey generateKey() throws GeneralSecurityException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES", "BC");
-
-        keyGenerator.init(256);
+        keyGenerator.init(KEY_SIZE);
 
         return keyGenerator.generateKey();
     }
@@ -66,7 +67,7 @@ public class Aes {
 
     public static byte[] generateIVBytes() {
         SecureRandom random = new SecureRandom();
-        byte[] ivBytes = new byte[16];
+        byte[] ivBytes = new byte[IV_SIZE];
         random.nextBytes(ivBytes);
 
         return ivBytes;

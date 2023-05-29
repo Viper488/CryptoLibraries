@@ -2,22 +2,26 @@ package pk;
 
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import pk.bouncycastle.asymetric.Rsa;
 import pk.bouncycastle.symmetric.Symmetric;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.GeneralSecurityException;
 import java.security.Security;
+import java.util.Base64;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         try {
+            Security.addProvider(new BouncyCastleProvider());
             String input = readFromFile();
             testSymmetricBouncyCastle("AES", input);
             testSymmetricBouncyCastle("Blowfish", input);
+            testRsaBouncyCastle(input);
 
-        } catch (FileNotFoundException | GeneralSecurityException | InvalidCipherTextException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -36,13 +40,24 @@ public class Main {
     }
 
     public static void testSymmetricBouncyCastle(String algorithm, String input) throws GeneralSecurityException, InvalidCipherTextException {
-        Security.addProvider(new BouncyCastleProvider());
         Symmetric sym = new Symmetric(algorithm);
 
         byte[] ivBytes = Symmetric.generateIVBytes();
         String encrypted = sym.encrypt(input, ivBytes);
         String decrypted = sym.decrypt(encrypted, ivBytes);
         System.out.println(algorithm + "-CBC");
+        showResult(input, encrypted, decrypted);
+    }
+
+    public static void testRsaBouncyCastle(String input) throws Exception {
+        Rsa rsa = new Rsa(2048);
+        String encrypted = rsa.encrypt(input, rsa.getPublicKey());
+        String decrypted = rsa.decrypt(encrypted, rsa.getPrivateKey());
+        System.out.println("RSA");
+        showResult(input, encrypted, decrypted);
+    }
+
+    private static void showResult(String input, String encrypted, String decrypted) {
         System.out.println("Original text: " + input);
         System.out.println("Encrypted text: " + encrypted);
         System.out.println("Decrypted text: " + decrypted);

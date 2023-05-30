@@ -4,6 +4,7 @@ import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import pk.asymetric.BcRsa;
+import pk.asymetric.TinkRsa;
 import pk.hash.BcSha256;
 import pk.hash.GuavaSha256;
 import pk.sign.BcDsa;
@@ -29,6 +30,7 @@ public class Main {
             testBouncyCastle(input);
 
             testTink(input);
+
             testShaGuava(input);
 
         } catch (Exception e) {
@@ -47,7 +49,7 @@ public class Main {
     public static void testTink(String input) throws Exception {
         testAesTink(input);
         testDsaTink(input);
-        testShaGuava(input);
+        testRsaTink(input);
     }
 
     public static String readFromFile() throws FileNotFoundException {
@@ -110,10 +112,21 @@ public class Main {
     public static void testDsaTink(String input) throws GeneralSecurityException {
         TinkDsa.sign(input);
     }
+
+    public static void testRsaTink(String input) throws Exception {
+        TinkRsa rsa = new TinkRsa();
+
+        String encrypted = rsa.encrypt(input);
+
+        System.out.println("RSA");
+        System.out.println("Original text: " + input);
+        System.out.println("Encrypted text: " + encrypted);
+    }
     public static void testShaGuava(String input) {
         String hash = GuavaSha256.hash(input);
         System.out.println("SHA256");
-        System.out.println(hash);
+        System.out.println("Original text: " + input);
+        System.out.println("Hash: " + hash);
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

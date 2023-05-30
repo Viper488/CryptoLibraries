@@ -4,12 +4,14 @@ import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import pk.bouncycastle.asymetric.Rsa;
+import pk.bouncycastle.hash.SHA256;
 import pk.bouncycastle.sign.Dsa;
 import pk.bouncycastle.symmetric.Symmetric;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -23,6 +25,7 @@ public class Main {
             testSymmetricBouncyCastle("Blowfish", input);
             testRsaBouncyCastle(input);
             testDsaBouncyCastle(input);
+            testSHA256(input);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -65,6 +68,15 @@ public class Main {
 
         System.out.println("Signature: " + Hex.toHexString(Arrays.toString(signature).getBytes()));
         System.out.println("Signature is valid: " + isValid);
+    }
+
+    public static void testSHA256(String input) throws NoSuchAlgorithmException {
+        String hash1 = SHA256.hashMethod1(input);
+        String hash2 =  SHA256.hashMethod2(input);
+        System.out.println("Original text: " + input);
+        System.out.println("Hash method 1: " + hash1);
+        System.out.println("Hash method 2: " + hash2);
+        System.out.println("Hash 1 " + (hash1.equals(hash2) ? "matches" : "doesn't match") + " hash 2");
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

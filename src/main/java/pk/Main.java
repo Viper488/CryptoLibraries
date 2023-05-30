@@ -6,6 +6,7 @@ import org.bouncycastle.util.encoders.Hex;
 import pk.asymetric.BcRsa;
 import pk.hash.BcSha256;
 import pk.sign.BcDsa;
+import pk.sign.TinkDsa;
 import pk.symmetric.BcSymmetric;
 import pk.symmetric.TinkAes;
 
@@ -23,17 +24,27 @@ public class Main {
         try {
             Security.addProvider(new BouncyCastleProvider());
             String input = readFromFile();
-            testSymmetricBouncyCastle("AES", input);
-            testSymmetricBouncyCastle("Blowfish", input);
-            testRsaBouncyCastle(input);
-            testDsaBouncyCastle(input);
-            testSHA256BouncyCastle(input);
 
-            testAesTink(input);
+            testBouncyCastle(input);
+
+            testTink(input);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void testBouncyCastle(String input) throws Exception {
+        testSymmetricBouncyCastle("AES", input);
+        testSymmetricBouncyCastle("Blowfish", input);
+        testRsaBouncyCastle(input);
+        testDsaBouncyCastle(input);
+        testSHA256BouncyCastle(input);
+    }
+
+    public static void testTink(String input) throws Exception {
+        testAesTink(input);
+        testDsaTink(input);
     }
 
     public static String readFromFile() throws FileNotFoundException {
@@ -91,6 +102,10 @@ public class Main {
         String decrypted = aes.decrypt(encrypted);
         System.out.println("AES");
         showResult(input, encrypted, decrypted);
+    }
+
+    public static void testDsaTink(String input) throws GeneralSecurityException {
+        TinkDsa.sign(input);
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

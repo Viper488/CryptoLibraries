@@ -5,6 +5,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import pk.asymetric.BcRsa;
 import pk.hash.BcSha256;
+import pk.hash.GuavaSha256;
 import pk.sign.BcDsa;
 import pk.sign.TinkDsa;
 import pk.symmetric.BcSymmetric;
@@ -28,6 +29,7 @@ public class Main {
             testBouncyCastle(input);
 
             testTink(input);
+            testShaGuava(input);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -45,6 +47,7 @@ public class Main {
     public static void testTink(String input) throws Exception {
         testAesTink(input);
         testDsaTink(input);
+        testShaGuava(input);
     }
 
     public static String readFromFile() throws FileNotFoundException {
@@ -106,6 +109,11 @@ public class Main {
 
     public static void testDsaTink(String input) throws GeneralSecurityException {
         TinkDsa.sign(input);
+    }
+    public static void testShaGuava(String input) {
+        String hash = GuavaSha256.hash(input);
+        System.out.println("SHA256");
+        System.out.println(hash);
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

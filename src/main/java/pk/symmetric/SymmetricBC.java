@@ -1,4 +1,4 @@
-package pk.bouncycastle.symmetric;
+package pk.symmetric;
 
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.AESEngine;
@@ -18,13 +18,13 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class Symmetric {
+public class SymmetricBC {
     private final int KEY_SIZE = 256;
     private static final int IV_SIZE = 16;
     private SecretKey secretKey;
     private PaddedBufferedBlockCipher cipher;
 
-    public Symmetric(String algorithm) throws GeneralSecurityException {
+    public SymmetricBC(String algorithm) throws GeneralSecurityException {
         if (algorithm.equals("AES")) {
             initializeAes();
         } else if (algorithm.equals("Blowfish")){

@@ -1,4 +1,4 @@
-package pk.bouncycastle.asymetric;
+package pk.asymetric;
 
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.engines.RSAEngine;
@@ -12,12 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
 import java.util.Base64;
 
-public class Rsa {
+public class RsaBC {
 
     private final AsymmetricCipherKeyPair cipherKeyPair;
     private final RSAKeyParameters publicKey;
     private final RSAPrivateCrtKeyParameters privateKey;
-    public Rsa(int keySize) throws Exception {
+    public RsaBC(int keySize) throws Exception {
         this.cipherKeyPair = generateRSAKeyPair(keySize);
         this.publicKey = (RSAKeyParameters) cipherKeyPair.getPublic();
         this.privateKey = (RSAPrivateCrtKeyParameters) cipherKeyPair.getPrivate();

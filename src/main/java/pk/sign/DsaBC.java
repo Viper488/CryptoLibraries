@@ -1,4 +1,4 @@
-package pk.bouncycastle.sign;
+package pk.sign;
 
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.generators.DSAKeyPairGenerator;
@@ -14,12 +14,12 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
-public class Dsa {
+public class DsaBC {
 
     private final DSAPublicKeyParameters publicKey;
     private final DSAPrivateKeyParameters privateKey;
 
-    public Dsa() {
+    public DsaBC() {
         AsymmetricCipherKeyPair keyPair = generateKeyPair();
         this.publicKey = (DSAPublicKeyParameters) keyPair.getPublic();
         this.privateKey = (DSAPrivateKeyParameters) keyPair.getPrivate();

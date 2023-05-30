@@ -1,5 +1,10 @@
-package pk.asymetric;
+package pk.hash;
 
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.Mac;
 import com.google.crypto.tink.aead.AeadConfig;
@@ -8,11 +13,9 @@ import com.google.crypto.tink.mac.MacConfig;
 import com.google.crypto.tink.mac.MacFactory;
 import com.google.crypto.tink.mac.MacKeyTemplates;
 import com.google.crypto.tink.subtle.Hex;
-import java.nio.charset.StandardCharsets;
-import java.security.GeneralSecurityException;
-public class TinkRsa {
 
-    public TinkRsa() throws GeneralSecurityException {
+public class TinkSha256 {
+    public TinkSha256() throws GeneralSecurityException {
         MacConfig.register();
         TinkConfig.register();
         AeadConfig.register();

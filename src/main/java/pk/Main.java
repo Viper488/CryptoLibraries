@@ -4,9 +4,9 @@ import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import pk.asymetric.BcRsa;
-import pk.asymetric.TinkRsa;
+import pk.asymetric.JavaRsa;
 import pk.hash.BcSha256;
-import pk.hash.GuavaSha256;
+import pk.hash.TinkSha256;
 import pk.sign.BcDsa;
 import pk.sign.TinkDsa;
 import pk.symmetric.BcSymmetric;
@@ -15,11 +15,10 @@ import pk.symmetric.TinkAes;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
+import java.security.*;
 import java.util.Arrays;
 import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -31,25 +30,36 @@ public class Main {
 
             testTink(input);
 
-            testShaGuava(input);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void testBouncyCastle(String input) throws Exception {
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("------                    BOUNCY CASTLE                  ------");
+        System.out.println("---------------------------------------------------------------");
         testSymmetricBouncyCastle("AES", input);
         testSymmetricBouncyCastle("Blowfish", input);
         testRsaBouncyCastle(input);
         testDsaBouncyCastle(input);
         testSHA256BouncyCastle(input);
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testTink(String input) throws Exception {
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("------             TINK & JAVA SECURITY                  ------");
+        System.out.println("---------------------------------------------------------------");
         testAesTink(input);
+        testJavaRsa(input);
         testDsaTink(input);
-        testRsaTink(input);
+        testShaTink(input);
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------");
     }
 
     public static String readFromFile() throws FileNotFoundException {
@@ -73,6 +83,7 @@ public class Main {
         String decrypted = sym.decrypt(encrypted, ivBytes);
         System.out.println(algorithm + "-CBC");
         showResult(input, encrypted, decrypted);
+        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testRsaBouncyCastle(String input) throws Exception {
@@ -81,6 +92,7 @@ public class Main {
         String decrypted = rsa.decrypt(encrypted);
         System.out.println("RSA");
         showResult(input, encrypted, decrypted);
+        System.out.println("---------------------------------------------------------------");
     }
     public static void testDsaBouncyCastle(String input) {
         BcDsa dsa = new BcDsa();
@@ -89,6 +101,7 @@ public class Main {
 
         System.out.println("Signature: " + Hex.toHexString(Arrays.toString(signature).getBytes()));
         System.out.println("Signature is valid: " + isValid);
+        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testSHA256BouncyCastle(String input) throws NoSuchAlgorithmException {
@@ -98,6 +111,7 @@ public class Main {
         System.out.println("Hash method 1: " + hash1);
         System.out.println("Hash method 2: " + hash2);
         System.out.println("Hash 1 " + (hash1.equals(hash2) ? "matches" : "doesn't match") + " hash 2");
+        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testAesTink(String input) throws GeneralSecurityException {
@@ -107,26 +121,33 @@ public class Main {
         String decrypted = aes.decrypt(encrypted);
         System.out.println("AES");
         showResult(input, encrypted, decrypted);
+        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testDsaTink(String input) throws GeneralSecurityException {
         TinkDsa.sign(input);
+        System.out.println("---------------------------------------------------------------");
     }
 
-    public static void testRsaTink(String input) throws Exception {
-        TinkRsa rsa = new TinkRsa();
+    public static void testShaTink(String input) throws Exception {
+        TinkSha256 rsa = new TinkSha256();
 
-        String encrypted = rsa.encrypt(input);
+        String hash = rsa.encrypt(input);
 
-        System.out.println("RSA");
-        System.out.println("Original text: " + input);
-        System.out.println("Encrypted text: " + encrypted);
-    }
-    public static void testShaGuava(String input) {
-        String hash = GuavaSha256.hash(input);
         System.out.println("SHA256");
         System.out.println("Original text: " + input);
         System.out.println("Hash: " + hash);
+        System.out.println("---------------------------------------------------------------");
+    }
+    public static void testJavaRsa(String input) throws Exception {
+        JavaRsa rsa = new JavaRsa();
+
+        String encrypted = rsa.encrypt(input);
+        String decrypted = rsa.decrypt(encrypted);
+
+        System.out.println("RSA");
+        showResult(input, encrypted, decrypted);
+        System.out.println("---------------------------------------------------------------");
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

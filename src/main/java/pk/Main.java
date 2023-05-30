@@ -7,6 +7,8 @@ import pk.asymetric.BcRsa;
 import pk.hash.BcSha256;
 import pk.sign.BcDsa;
 import pk.symmetric.BcSymmetric;
+import pk.symmetric.TinkAes;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -26,6 +28,9 @@ public class Main {
             testRsaBouncyCastle(input);
             testDsaBouncyCastle(input);
             testSHA256BouncyCastle(input);
+
+            testAesTink(input);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -77,6 +82,15 @@ public class Main {
         System.out.println("Hash method 1: " + hash1);
         System.out.println("Hash method 2: " + hash2);
         System.out.println("Hash 1 " + (hash1.equals(hash2) ? "matches" : "doesn't match") + " hash 2");
+    }
+
+    public static void testAesTink(String input) throws GeneralSecurityException {
+        TinkAes aes = new TinkAes();
+
+        String encrypted = aes.encrypt(input);
+        String decrypted = aes.decrypt(encrypted);
+        System.out.println("AES");
+        showResult(input, encrypted, decrypted);
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

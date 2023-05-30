@@ -18,13 +18,13 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class SymmetricBC {
+public class BcSymmetric {
     private final int KEY_SIZE = 256;
     private static final int IV_SIZE = 16;
     private SecretKey secretKey;
     private PaddedBufferedBlockCipher cipher;
 
-    public SymmetricBC(String algorithm) throws GeneralSecurityException {
+    public BcSymmetric(String algorithm) throws GeneralSecurityException {
         if (algorithm.equals("AES")) {
             initializeAes();
         } else if (algorithm.equals("Blowfish")){

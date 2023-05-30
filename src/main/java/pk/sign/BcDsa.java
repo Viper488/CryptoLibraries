@@ -14,12 +14,12 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
-public class DsaBC {
+public class BcDsa {
 
     private final DSAPublicKeyParameters publicKey;
     private final DSAPrivateKeyParameters privateKey;
 
-    public DsaBC() {
+    public BcDsa() {
         AsymmetricCipherKeyPair keyPair = generateKeyPair();
         this.publicKey = (DSAPublicKeyParameters) keyPair.getPublic();
         this.privateKey = (DSAPrivateKeyParameters) keyPair.getPrivate();

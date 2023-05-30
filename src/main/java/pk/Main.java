@@ -3,10 +3,10 @@ package pk;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
-import pk.asymetric.RsaBC;
-import pk.hash.SHA256BC;
-import pk.sign.DsaBC;
-import pk.symmetric.SymmetricBC;
+import pk.asymetric.BcRsa;
+import pk.hash.BcSha256;
+import pk.sign.BcDsa;
+import pk.symmetric.BcSymmetric;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
@@ -25,7 +25,7 @@ public class Main {
             testSymmetricBouncyCastle("Blowfish", input);
             testRsaBouncyCastle(input);
             testDsaBouncyCastle(input);
-            testSHA256(input);
+            testSHA256BouncyCastle(input);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -45,9 +45,9 @@ public class Main {
     }
 
     public static void testSymmetricBouncyCastle(String algorithm, String input) throws GeneralSecurityException, InvalidCipherTextException {
-        SymmetricBC sym = new SymmetricBC(algorithm);
+        BcSymmetric sym = new BcSymmetric(algorithm);
 
-        byte[] ivBytes = SymmetricBC.generateIVBytes();
+        byte[] ivBytes = BcSymmetric.generateIVBytes();
         String encrypted = sym.encrypt(input, ivBytes);
         String decrypted = sym.decrypt(encrypted, ivBytes);
         System.out.println(algorithm + "-CBC");
@@ -55,14 +55,14 @@ public class Main {
     }
 
     public static void testRsaBouncyCastle(String input) throws Exception {
-        RsaBC rsa = new RsaBC(2048);
+        BcRsa rsa = new BcRsa(2048);
         String encrypted = rsa.encrypt(input);
         String decrypted = rsa.decrypt(encrypted);
         System.out.println("RSA");
         showResult(input, encrypted, decrypted);
     }
     public static void testDsaBouncyCastle(String input) {
-        DsaBC dsa = new DsaBC();
+        BcDsa dsa = new BcDsa();
         BigInteger[] signature = dsa.sign(input);
         boolean isValid = dsa.verify(input, signature);
 
@@ -70,9 +70,9 @@ public class Main {
         System.out.println("Signature is valid: " + isValid);
     }
 
-    public static void testSHA256(String input) throws NoSuchAlgorithmException {
-        String hash1 = SHA256BC.hashMethod1(input);
-        String hash2 =  SHA256BC.hashMethod2(input);
+    public static void testSHA256BouncyCastle(String input) throws NoSuchAlgorithmException {
+        String hash1 = BcSha256.hashMethod1(input);
+        String hash2 =  BcSha256.hashMethod2(input);
         System.out.println("Original text: " + input);
         System.out.println("Hash method 1: " + hash1);
         System.out.println("Hash method 2: " + hash2);

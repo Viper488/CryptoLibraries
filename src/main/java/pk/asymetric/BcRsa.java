@@ -12,12 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPairGenerator;
 import java.util.Base64;
 
-public class RsaBC {
+public class BcRsa {
 
     private final AsymmetricCipherKeyPair cipherKeyPair;
     private final RSAKeyParameters publicKey;
     private final RSAPrivateCrtKeyParameters privateKey;
-    public RsaBC(int keySize) throws Exception {
+    public BcRsa(int keySize) throws Exception {
         this.cipherKeyPair = generateRSAKeyPair(keySize);
         this.publicKey = (RSAKeyParameters) cipherKeyPair.getPublic();
         this.privateKey = (RSAPrivateCrtKeyParameters) cipherKeyPair.getPrivate();

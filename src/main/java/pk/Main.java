@@ -36,27 +36,55 @@ public class Main {
     }
 
     public static void testBouncyCastle(String input) throws Exception {
+        long start;
         System.out.println("---------------------------------------------------------------");
         System.out.println("------                    BOUNCY CASTLE                  ------");
         System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testSymmetricBouncyCastle("AES", input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
+        System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testSymmetricBouncyCastle("Blowfish", input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
+        System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testRsaBouncyCastle(input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
+        System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testDsaBouncyCastle(input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
+        System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testSHA256BouncyCastle(input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
         System.out.println("---------------------------------------------------------------");
         System.out.println("---------------------------------------------------------------");
         System.out.println("---------------------------------------------------------------");
     }
 
     public static void testTink(String input) throws Exception {
+        long start;
         System.out.println("---------------------------------------------------------------");
         System.out.println("------             TINK & JAVA SECURITY                  ------");
         System.out.println("---------------------------------------------------------------");
+
+        start = System.nanoTime();
         testAesTink(input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
+        System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testJavaRsa(input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
+        System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testDsaTink(input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
+        System.out.println("---------------------------------------------------------------");
+        start = System.nanoTime();
         testShaTink(input);
+        System.out.println("Duration: " + (System.nanoTime() - start) / 1000000 + " ms");
         System.out.println("---------------------------------------------------------------");
         System.out.println("---------------------------------------------------------------");
         System.out.println("---------------------------------------------------------------");
@@ -83,7 +111,6 @@ public class Main {
         String decrypted = sym.decrypt(encrypted, ivBytes);
         System.out.println(algorithm + "-CBC");
         showResult(input, encrypted, decrypted);
-        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testRsaBouncyCastle(String input) throws Exception {
@@ -92,7 +119,6 @@ public class Main {
         String decrypted = rsa.decrypt(encrypted);
         System.out.println("RSA");
         showResult(input, encrypted, decrypted);
-        System.out.println("---------------------------------------------------------------");
     }
     public static void testDsaBouncyCastle(String input) {
         BcDsa dsa = new BcDsa();
@@ -101,7 +127,6 @@ public class Main {
 
         System.out.println("Signature: " + Hex.toHexString(Arrays.toString(signature).getBytes()));
         System.out.println("Signature is valid: " + isValid);
-        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testSHA256BouncyCastle(String input) throws NoSuchAlgorithmException {
@@ -111,7 +136,6 @@ public class Main {
         System.out.println("Hash method 1: " + hash1);
         System.out.println("Hash method 2: " + hash2);
         System.out.println("Hash 1 " + (hash1.equals(hash2) ? "matches" : "doesn't match") + " hash 2");
-        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testAesTink(String input) throws GeneralSecurityException {
@@ -121,12 +145,10 @@ public class Main {
         String decrypted = aes.decrypt(encrypted);
         System.out.println("AES");
         showResult(input, encrypted, decrypted);
-        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testDsaTink(String input) throws GeneralSecurityException {
         TinkDsa.sign(input);
-        System.out.println("---------------------------------------------------------------");
     }
 
     public static void testShaTink(String input) throws Exception {
@@ -137,7 +159,6 @@ public class Main {
         System.out.println("SHA256");
         System.out.println("Original text: " + input);
         System.out.println("Hash: " + hash);
-        System.out.println("---------------------------------------------------------------");
     }
     public static void testJavaRsa(String input) throws Exception {
         JavaRsa rsa = new JavaRsa();
@@ -147,7 +168,6 @@ public class Main {
 
         System.out.println("RSA");
         showResult(input, encrypted, decrypted);
-        System.out.println("---------------------------------------------------------------");
     }
 
     private static void showResult(String input, String encrypted, String decrypted) {

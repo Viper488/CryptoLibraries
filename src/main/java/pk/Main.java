@@ -133,6 +133,7 @@ public class Main {
     public static void testSHA256BouncyCastle(String input) throws NoSuchAlgorithmException {
         String hash1 = BcSha256.hashMethod1(input);
         String hash2 =  BcSha256.hashMethod2(input);
+        System.out.println("SHA256");
         System.out.println("Original text: " + input);
         System.out.println("Hash method 1: " + hash1);
         System.out.println("Hash method 2: " + hash2);

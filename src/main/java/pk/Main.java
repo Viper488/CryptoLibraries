@@ -125,6 +125,7 @@ public class Main {
         BigInteger[] signature = dsa.sign(input);
         boolean isValid = dsa.verify(input, signature);
 
+        System.out.println("DSA");
         System.out.println("Signature: " + Hex.toHexString(Arrays.toString(signature).getBytes()));
         System.out.println("Signature is valid: " + isValid);
     }
